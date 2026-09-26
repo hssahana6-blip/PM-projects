@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folio — Investor Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0f1923;
+  --ink-soft: #2c3e4f;
+  --parchment: #f5f0e8;
+  --parchment-dark: #ede7d9;
+  --sage: #7a9e7e;
+  --sage-light: #e8f0e9;
+  --sage-dark: #4d7352;
+  --muted: #8a9ba8;
+  --white: #ffffff;
+  --danger: #c0392b;
+}
+
+body {
+  background: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Top bar */
+.topbar {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.brand {
+  color: var(--parchment);
+  font-family: Georgia, serif;
+  font-size: 22px;
+  letter-spacing: -0.3px;
+}
+
+.brand span { color: var(--sage); }
+
+.screen-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.2);
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+}
+
+.dot.active { background: var(--sage); }
+
+.nav-label {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: 12px;
+  align-self: center;
+}
+
+/* Phone frame */
+.phone-wrap {
+  position: relative;
+  width: 375px;
+}
+
+.phone-frame {
+  background: #1a2530;
+  border-radius: 44px;
+  padding: 14px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.phone-screen {
+  background: var(--parchment);
+  border-radius: 34px;
+  overflow: hidden;
+  height: 720px;
+  position: relative;
+}
+
+/* Status bar */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px 6px;
+  background: transparent;
+}
+
+.time { font-size: 13px; font-weight: 600; color: var(--ink); }
+.icons { display: flex; gap: 5px; align-items: center; }
+.icons svg { width: 14px; height: 14px; fill: var(--ink); }
+
+/* Screen container */
+.screens { position: relative; width: 100%; height: 100%; }
+
+.screen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  background: var(--parchment);
+}
+
+.screen.active { display: flex; }
+
+/* ─── SCREEN 1: Onboarding hook ─── */
+.s1-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 28px 28px;
+  justify-content: space-between;
+}
+
+.s1-question {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.s1-eyebrow {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.s1-headline {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.s1-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.choice-btn {
+  background: var(--white);
+  border: 1.5px solid var(--parchment-dark);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+
+.choice-btn:hover { border-color: var(--sage); background: var(--sage-light); }
+.choice-btn.selected { border-color: var(--sage); background: var(--sage-light); }
+
+.choice-label {
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+  display: block;
+}
+
+.choice-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  display: block;
+}
+
+.cta-btn {
+  background: var(--ink);
+  color: var(--parchment);
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 16px;
+  transition: opacity 0.15s;
+}
+
+.cta-btn:hover { opacity: 0.85; }
+
+.cta-btn.sage {
+  background: var(--sage);
+  color: var(--white);
+}
+
+/* ─── SCREEN 2: Personalisation ─── */
+.s2-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 28px 28px;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.s2-header { margin-bottom: 4px; }
+
+.s2-headline {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.s2-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.section-label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.time-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--parchment-dark);
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  background: var(--white);
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+
+.chip.selected { border-color: var(--sage); background: var(--sage-light); color: var(--sage-dark); font-weight: 500; }
+.chip:hover { border-color: var(--sage); }
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mood-card {
+  background: var(--white);
+  border: 1.5px solid var(--parchment-dark);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mood-card:hover { border-color: var(--sage); }
+.mood-card.selected { border-color: var(--sage); background: var(--sage-light); }
+
+.mood-icon { font-size: 20px; margin-bottom: 4px; }
+.mood-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.mood-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.format-row {
+  display: flex;
+  gap: 8px;
+}
+
+.format-btn {
+  flex: 1;
+  background: var(--white);
+  border: 1.5px solid var(--parchment-dark);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+
+.format-btn:hover { border-color: var(--sage); }
+.format-btn.selected { border-color: var(--sage); background: var(--sage-light); }
+.format-icon { font-size: 18px; }
+.format-name { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+
+/* ─── SCREEN 3: Home ─── */
+.s3-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.home-header {
+  padding: 16px 24px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.home-greeting {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.home-date { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--parchment);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+}
+
+.today-card {
+  margin: 0 20px 16px;
+  background: var(--ink);
+  border-radius: 18px;
+  padding: 20px;
+  color: var(--parchment);
+}
+
+.today-label { font-size: 11px; color: var(--sage); letter-spacing: 0.05em; margin-bottom: 10px; }
+.today-book { font-family: Georgia, serif; font-size: 18px; line-height: 1.25; }
+.today-author { font-size: 12px; color: rgba(245,240,232,0.6); margin-top: 4px; }
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.progress-bar-wrap { flex: 1; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; margin-right: 10px; }
+.progress-fill { height: 100%; background: var(--sage); border-radius: 2px; width: 34%; }
+.progress-pct { font-size: 12px; color: rgba(245,240,232,0.7); }
+.read-now-btn {
+  margin-top: 14px;
+  background: var(--sage);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  width: 100%;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 0 24px;
+  margin-bottom: 10px;
+}
+
+.streak-row {
+  display: flex;
+  gap: 6px;
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+
+.streak-day {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.streak-circle {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--parchment-dark);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.streak-circle.done { background: var(--sage); }
+.streak-circle.today { background: var(--ink); }
+.streak-day-label { font-size: 10px; color: var(--muted); }
+
+.suggestion-strip {
+  padding: 0 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggestion-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--parchment-dark);
+}
+
+.book-spine {
+  width: 40px; height: 54px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.suggestion-info { flex: 1; }
+.suggestion-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+.suggestion-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.suggestion-tag {
+  font-size: 10px;
+  background: var(--sage-light);
+  color: var(--sage-dark);
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ─── SCREEN 4: Reading Receipt ─── */
+.s4-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 24px;
+  overflow-y: auto;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.receipt-week {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.receipt-headline {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  color: var(--ink);
+  margin-top: 6px;
+  line-height: 1.2;
+}
+
+.receipt-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.receipt-big-stat {
+  background: var(--ink);
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--parchment);
+}
+
+.big-number {
+  font-family: Georgia, serif;
+  font-size: 52px;
+  color: var(--sage);
+  line-height: 1;
+}
+
+.big-label {
+  font-size: 12px;
+  color: rgba(245,240,232,0.6);
+  margin-top: 4px;
+}
+
+.stat-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.stat-mini {
+  flex: 1;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 14px 12px;
+  border: 1px solid var(--parchment-dark);
+  text-align: center;
+}
+
+.stat-mini-num {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  color: var(--ink);
+}
+
+.stat-mini-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.books-finished {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--parchment-dark);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.bf-label { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+
+.bf-book {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.bf-book:last-child { border-bottom: none; }
+.bf-spine { width: 30px; height: 40px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.bf-info { flex: 1; }
+.bf-title { font-size: 12px; font-weight: 500; color: var(--ink); }
+.bf-author { font-size: 11px; color: var(--muted); }
+.bf-check { color: var(--sage); font-size: 14px; }
+
+.compare-bar {
+  background: var(--sage-light);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.compare-text { font-size: 12px; color: var(--sage-dark); line-height: 1.4; }
+.compare-text strong { font-weight: 600; }
+
+/* ─── SCREEN 5: Progress / Habit ─── */
+.s5-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 24px;
+  overflow-y: auto;
+  gap: 14px;
+}
+
+.s5-header {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.habit-heatmap {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1px solid var(--parchment-dark);
+  padding: 14px;
+}
+
+.hm-label { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+
+.hm-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.hm-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: var(--parchment-dark);
+}
+
+.hm-cell.l1 { background: #c8ddc9; }
+.hm-cell.l2 { background: #9ec4a0; }
+.hm-cell.l3 { background: var(--sage); }
+.hm-cell.l4 { background: var(--sage-dark); }
+
+.hm-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.hm-day-label { font-size: 9px; color: var(--muted); text-align: center; }
+
+.milestone-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.milestone {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--parchment-dark);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.milestone-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.milestone-icon.earned { background: var(--sage-light); }
+.milestone-icon.locked { background: var(--parchment-dark); filter: grayscale(1); opacity: 0.5; }
+
+.milestone-info { flex: 1; }
+.milestone-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.milestone-desc { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+.milestone-earned-badge {
+  font-size: 10px;
+  background: var(--sage-light);
+  color: var(--sage-dark);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.next-goal {
+  background: var(--ink);
+  border-radius: 14px;
+  padding: 16px;
+  color: var(--parchment);
+}
+
+.ng-label { font-size: 11px; color: var(--sage); letter-spacing: 0.04em; margin-bottom: 8px; }
+.ng-text { font-family: Georgia, serif; font-size: 16px; line-height: 1.3; }
+.ng-sub { font-size: 12px; color: rgba(245,240,232,0.55); margin-top: 4px; }
+.ng-bar { height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; margin-top: 12px; }
+.ng-fill { height: 100%; background: var(--sage); border-radius: 2px; width: 60%; }
+
+/* ─── SCREEN 3b: Reading (Kindle-style) ─── */
+.reading-screen {
+  background: #faf7f2;
+}
+
+.reading-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px 8px;
+  border-bottom: 1px solid #e8e2d6;
+  background: #faf7f2;
+}
+
+.reading-book-title {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: var(--ink);
+  text-align: center;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.reading-book-author {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 1px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--muted);
+  padding: 4px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.close-btn:hover { background: var(--parchment-dark); color: var(--ink); }
+
+.reading-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px 16px;
+}
+
+.reading-chapter {
+  font-family: Georgia, serif;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.reading-para {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: #2a2018;
+  line-height: 1.85;
+  margin-bottom: 18px;
+}
+
+.reading-para .highlight {
+  background: rgba(122, 158, 126, 0.25);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.reading-bottombar {
+  padding: 10px 20px 14px;
+  border-top: 1px solid #e8e2d6;
+  background: #faf7f2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reading-progress-bar {
+  flex: 1;
+  height: 3px;
+  background: #e0dace;
+  border-radius: 2px;
+}
+
+.reading-progress-fill {
+  height: 100%;
+  background: var(--sage);
+  border-radius: 2px;
+  width: 34%;
+}
+
+.reading-pct {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.reading-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.reading-icon-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.reading-icon-btn:hover { opacity: 1; }
+
+/* Bottom nav */
+.bottom-nav {
+  display: flex;
+  padding: 10px 20px 16px;
+  border-top: 1px solid var(--parchment-dark);
+  background: var(--parchment);
+  gap: 0;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+}
+
+.nav-item.active { opacity: 1; }
+.nav-icon { font-size: 18px; }
+.nav-text { font-size: 10px; color: var(--ink); }
+
+/* Navigation arrows */
+.nav-arrows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 1.5rem;
+}
+
+.arrow-btn {
+  background: rgba(245,240,232,0.1);
+  border: 1px solid rgba(245,240,232,0.15);
+  color: var(--parchment);
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s;
+}
+
+.arrow-btn:hover { background: rgba(245,240,232,0.18); }
+.arrow-btn:disabled { opacity: 0.25; cursor: default; }
+
+.screen-counter {
+  color: rgba(245,240,232,0.4);
+  font-size: 12px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.screen-name {
+  color: rgba(245,240,232,0.5);
+  font-size: 11px;
+  text-align: center;
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">folio<span>.</span></div>
+  <div style="display:flex;align-items:center;">
+    <div class="screen-nav">
+      <button class="dot active" onclick="goTo(0)"></button>
+      <button class="dot" onclick="goTo(1)"></button>
+      <button class="dot" onclick="goTo(2)"></button>
+      <button class="dot" onclick="goTo(3)"></button>
+      <button class="dot" onclick="goTo(4)"></button>
+      <button class="dot" onclick="goTo(5)"></button>
+    </div>
+    <span class="nav-label" id="nav-label">Onboarding</span>
+  </div>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone-frame">
+    <div class="phone-screen">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="icons">
+          <svg viewBox="0 0 24 24"><path d="M1 6l5 5 6-6 6 6 5-5"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-8 0v2"/></svg>
+        </div>
+      </div>
+
+      <div class="screens">
+
+        <!-- ═══ SCREEN 1: Onboarding Hook ═══ -->
+        <div class="screen active" id="screen-0">
+          <div class="s1-body">
+            <div class="s1-question">
+              <div class="s1-eyebrow">1 of 3 · Getting to know you</div>
+              <div class="s1-headline">When did you last finish a book?</div>
+              <div class="s1-choices">
+                <button class="choice-btn" onclick="selectChoice(this)">
+                  <span class="choice-label">This week</span>
+                  <span class="choice-sub">You're already in the habit</span>
+                </button>
+                <button class="choice-btn" onclick="selectChoice(this)">
+                  <span class="choice-label">A few months ago</span>
+                  <span class="choice-sub">Life got in the way — it happens</span>
+                </button>
+                <button class="choice-btn selected" onclick="selectChoice(this)">
+                  <span class="choice-label">I can't remember</span>
+                  <span class="choice-sub">That's exactly why you're here</span>
+                </button>
+                <button class="choice-btn" onclick="selectChoice(this)">
+                  <span class="choice-label">I don't really read</span>
+                  <span class="choice-sub">You will. Let's start small.</span>
+                </button>
+              </div>
+            </div>
+            <button class="cta-btn" onclick="next()">That's me → next question</button>
+          </div>
+        </div>
+
+        <!-- ═══ SCREEN 2: Personalisation ═══ -->
+        <div class="screen" id="screen-1">
+          <div class="s2-body">
+            <div class="s2-header">
+              <div class="s2-headline">Let's build around your life, not against it.</div>
+              <div class="s2-sub">No commitment. Just honest answers.</div>
+            </div>
+
+            <div>
+              <div class="section-label">How much time can you realistically spare each day?</div>
+              <div class="time-chips">
+                <button class="chip" onclick="selectChip(this, 'time')">5 min</button>
+                <button class="chip selected" onclick="selectChip(this, 'time')">10 min</button>
+                <button class="chip" onclick="selectChip(this, 'time')">20 min</button>
+                <button class="chip" onclick="selectChip(this, 'time')">30+ min</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="section-label">How do you want to feel when you read?</div>
+              <div class="mood-grid">
+                <div class="mood-card selected" onclick="toggleMood(this)">
+                  <div class="mood-icon">🌿</div>
+                  <div class="mood-name">Calm</div>
+                  <div class="mood-desc">Wind down, slow pace</div>
+                </div>
+                <div class="mood-card" onclick="toggleMood(this)">
+                  <div class="mood-icon">⚡</div>
+                  <div class="mood-name">Gripped</div>
+                  <div class="mood-desc">Can't put it down</div>
+                </div>
+                <div class="mood-card selected" onclick="toggleMood(this)">
+                  <div class="mood-icon">💡</div>
+                  <div class="mood-name">Smarter</div>
+                  <div class="mood-desc">Learn something real</div>
+                </div>
+                <div class="mood-card" onclick="toggleMood(this)">
+                  <div class="mood-icon">😂</div>
+                  <div class="mood-name">Light</div>
+                  <div class="mood-desc">Easy, fun, joyful</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="section-label">Format preference</div>
+              <div class="format-row">
+                <button class="format-btn selected" onclick="selectChip(this,'fmt')">
+                  <div class="format-icon">📖</div>
+                  <div class="format-name">Books</div>
+                </button>
+                <button class="format-btn selected" onclick="selectChip(this,'fmt')">
+                  <div class="format-icon">📰</div>
+                  <div class="format-name">Articles</div>
+                </button>
+                <button class="format-btn" onclick="selectChip(this,'fmt')">
+                  <div class="format-icon">🎧</div>
+                  <div class="format-name">Audio</div>
+                </button>
+              </div>
+            </div>
+
+            <button class="cta-btn" onclick="next()">Build my reading plan</button>
+          </div>
+        </div>
+
+        <!-- ═══ SCREEN 3: Home ═══ -->
+        <div class="screen" id="screen-2">
+          <div class="s3-body">
+            <div class="home-header">
+              <div>
+                <div class="home-greeting">Good morning, Priya.</div>
+                <div class="home-date">Thursday · 10 min to read today</div>
+              </div>
+              <div class="avatar">P</div>
+            </div>
+
+            <div class="today-card">
+              <div class="today-label">Continue reading</div>
+              <div class="today-book">Atomic Habits</div>
+              <div class="today-author">James Clear · Chapter 8</div>
+              <div class="progress-row">
+                <div class="progress-bar-wrap"><div class="progress-fill"></div></div>
+                <span class="progress-pct">34% done</span>
+              </div>
+              <button class="read-now-btn" onclick="goTo(3)">Read now — 8 min left in chapter</button>
+            </div>
+
+            <div class="section-title">This week's streak</div>
+            <div class="streak-row">
+              <div class="streak-day">
+                <div class="streak-circle done">✓</div>
+                <div class="streak-day-label">Mon</div>
+              </div>
+              <div class="streak-day">
+                <div class="streak-circle done">✓</div>
+                <div class="streak-day-label">Tue</div>
+              </div>
+              <div class="streak-day">
+                <div class="streak-circle done">✓</div>
+                <div class="streak-day-label">Wed</div>
+              </div>
+              <div class="streak-day">
+                <div class="streak-circle today" style="color:#f5f0e8;font-size:11px;">now</div>
+                <div class="streak-day-label">Thu</div>
+              </div>
+              <div class="streak-day">
+                <div class="streak-circle"></div>
+                <div class="streak-day-label">Fri</div>
+              </div>
+              <div class="streak-day">
+                <div class="streak-circle"></div>
+                <div class="streak-day-label">Sat</div>
+              </div>
+              <div class="streak-day">
+                <div class="streak-circle"></div>
+                <div class="streak-day-label">Sun</div>
+              </div>
+            </div>
+
+            <div class="section-title">Up next — matches your mood</div>
+            <div class="suggestion-strip">
+              <div class="suggestion-card">
+                <div class="book-spine" style="background:#dce8f5;">📘</div>
+                <div class="suggestion-info">
+                  <div class="suggestion-title">Thinking, Fast and Slow</div>
+                  <div class="suggestion-meta">Daniel Kahneman · 4.2h at your pace</div>
+                </div>
+                <span class="suggestion-tag">Smarter</span>
+              </div>
+              <div class="suggestion-card">
+                <div class="book-spine" style="background:#f0e8f5;">📕</div>
+                <div class="suggestion-info">
+                  <div class="suggestion-title">The 5-page daily habit</div>
+                  <div class="suggestion-meta">Article · 4 min read</div>
+                </div>
+                <span class="suggestion-tag">Quick read</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-nav">
+            <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+            <div class="nav-item"><div class="nav-icon">🔍</div><div class="nav-text">Discover</div></div>
+            <div class="nav-item" onclick="goTo(4)"><div class="nav-icon">📋</div><div class="nav-text">Receipt</div></div>
+            <div class="nav-item" onclick="goTo(5)"><div class="nav-icon">📈</div><div class="nav-text">Progress</div></div>
+          </div>
+        </div>
+
+        <!-- ═══ SCREEN 3b: Reading (Kindle-style) ═══ -->
+        <div class="screen reading-screen" id="screen-3">
+          <div class="reading-topbar">
+            <div style="width:30px;"></div>
+            <div>
+              <div class="reading-book-title">Atomic Habits</div>
+              <div class="reading-book-author">James Clear</div>
+            </div>
+            <button class="close-btn" onclick="goTo(4)" title="Close and see your session summary">✕</button>
+          </div>
+
+          <div class="reading-content">
+            <div class="reading-chapter">Chapter 8 — How to Make a Habit Irresistible</div>
+
+            <p class="reading-para">In the 1940s, a Dutch scientist named Nikolaas Tinbergen performed a series of experiments that would forever change our understanding of what motivates behaviour.</p>
+
+            <p class="reading-para">Tinbergen—who would later receive the Nobel Prize in Physiology or Medicine—was studying herring gulls. He noticed that when a mother gull returned to the nest, the baby gulls would peck at a red spot on her beak to encourage her to regurgitate food.</p>
+
+            <p class="reading-para"><span class="highlight">The more exaggerated the stimulus, the more irresistible it became.</span> A wooden beak with three red dots triggered more pecking than a real beak with one. A giant head with an enormous red spot — something that had never existed in nature — triggered even more.</p>
+
+            <p class="reading-para">Scientists refer to these invented stimuli as supernormal stimuli. A supernormal stimulus is a heightened version of reality that elicits a stronger response than the original thing.</p>
+
+            <p class="reading-para">Humans are no different. Modern food companies, social media platforms, and entertainment services are all in the business of creating supernormal stimuli — products so engineered for pleasure that our ancient reward systems can barely resist them.</p>
+
+            <p class="reading-para">The more dopamine that is released by an activity, the stronger the craving to repeat it. This is why junk food is hard to stop eating. This is why social media pulls us back in. And this is why <span class="highlight">making habits attractive is one of the most important things you can do</span> if you want to build new ones.</p>
+          </div>
+
+          <div class="reading-bottombar">
+            <div class="reading-actions">
+              <button class="reading-icon-btn" title="Highlight">🖊</button>
+              <button class="reading-icon-btn" title="Bookmark">🔖</button>
+            </div>
+            <div class="reading-progress-bar">
+              <div class="reading-progress-fill"></div>
+            </div>
+            <div class="reading-pct">34%</div>
+          </div>
+        </div>
+
+        <!-- ═══ SCREEN 4: Reading Receipt ═══ -->
+        <div class="screen" id="screen-4">
+          <div class="s4-body">
+            <div class="receipt-header">
+              <div class="receipt-week">Week of Sep 22 – 28, 2026</div>
+              <div class="receipt-headline">You read more than you think.</div>
+              <div class="receipt-sub">Here's your week in reading.</div>
+            </div>
+
+            <div class="receipt-big-stat">
+              <div class="big-number">47</div>
+              <div class="big-label">minutes read this week</div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-mini">
+                <div class="stat-mini-num">3</div>
+                <div class="stat-mini-label">articles finished</div>
+              </div>
+              <div class="stat-mini">
+                <div class="stat-mini-num">68</div>
+                <div class="stat-mini-label">pages turned</div>
+              </div>
+              <div class="stat-mini">
+                <div class="stat-mini-num">5</div>
+                <div class="stat-mini-label">day streak</div>
+              </div>
+            </div>
+
+            <div class="books-finished">
+              <div class="bf-label">Finished this week</div>
+              <div class="bf-book">
+                <div class="bf-spine" style="background:#dce8f5;">📘</div>
+                <div class="bf-info">
+                  <div class="bf-title">Deep Work</div>
+                  <div class="bf-author">Cal Newport</div>
+                </div>
+                <div class="bf-check">✓</div>
+              </div>
+            </div>
+
+            <div class="compare-bar">
+              <div style="font-size:22px;">📈</div>
+              <div class="compare-text">
+                <strong>4× more than last month.</strong> You read 12 minutes in August. This week alone you hit 47.
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-nav">
+            <div class="nav-item" onclick="goTo(2)"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+            <div class="nav-item"><div class="nav-icon">🔍</div><div class="nav-text">Discover</div></div>
+            <div class="nav-item active"><div class="nav-icon">📋</div><div class="nav-text">Receipt</div></div>
+            <div class="nav-item" onclick="goTo(5)"><div class="nav-icon">📈</div><div class="nav-text">Progress</div></div>
+          </div>
+        </div>
+
+        <!-- ═══ SCREEN 5: Progress / Habit ═══ -->
+        <div class="screen" id="screen-5">
+          <div class="s5-body">
+            <div class="s5-header">Three weeks in.<br>Here's what's changed.</div>
+
+            <div class="habit-heatmap">
+              <div class="hm-label">Reading activity — last 3 weeks</div>
+              <div class="hm-grid">
+                <div class="hm-cell l1"></div><div class="hm-cell"></div><div class="hm-cell l2"></div><div class="hm-cell l1"></div><div class="hm-cell l3"></div><div class="hm-cell"></div><div class="hm-cell l1"></div>
+                <div class="hm-cell l2"></div><div class="hm-cell l1"></div><div class="hm-cell l3"></div><div class="hm-cell l2"></div><div class="hm-cell l2"></div><div class="hm-cell l1"></div><div class="hm-cell l3"></div>
+                <div class="hm-cell l3"></div><div class="hm-cell l2"></div><div class="hm-cell l4"></div><div class="hm-cell l3"></div><div class="hm-cell l4"></div><div class="hm-cell l3"></div><div class="hm-cell l2"></div>
+              </div>
+              <div class="hm-days">
+                <div class="hm-day-label">M</div><div class="hm-day-label">T</div><div class="hm-day-label">W</div><div class="hm-day-label">T</div><div class="hm-day-label">F</div><div class="hm-day-label">S</div><div class="hm-day-label">S</div>
+              </div>
+            </div>
+
+            <div class="milestone-stack">
+              <div class="milestone">
+                <div class="milestone-icon earned">🌱</div>
+                <div class="milestone-info">
+                  <div class="milestone-name">First 7-day streak</div>
+                  <div class="milestone-desc">Read every day for a week</div>
+                </div>
+                <div class="milestone-earned-badge">Earned</div>
+              </div>
+              <div class="milestone">
+                <div class="milestone-icon earned">📖</div>
+                <div class="milestone-info">
+                  <div class="milestone-name">First book finished</div>
+                  <div class="milestone-desc">Deep Work — 3 hrs 14 min</div>
+                </div>
+                <div class="milestone-earned-badge">Earned</div>
+              </div>
+              <div class="milestone">
+                <div class="milestone-icon locked">🔥</div>
+                <div class="milestone-info">
+                  <div class="milestone-name">14-day streak</div>
+                  <div class="milestone-desc">8 more days to go</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="next-goal">
+              <div class="ng-label">Next milestone</div>
+              <div class="ng-text">Finish Atomic Habits before Sunday</div>
+              <div class="ng-sub">66% done · ~42 min left at your pace</div>
+              <div class="ng-bar"><div class="ng-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="bottom-nav">
+            <div class="nav-item" onclick="goTo(2)"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+            <div class="nav-item"><div class="nav-icon">🔍</div><div class="nav-text">Discover</div></div>
+            <div class="nav-item" onclick="goTo(4)"><div class="nav-icon">📋</div><div class="nav-text">Receipt</div></div>
+            <div class="nav-item active"><div class="nav-icon">📈</div><div class="nav-text">Progress</div></div>
+          </div>
+        </div>
+
+      </div><!-- /screens -->
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-frame -->
+</div><!-- /phone-wrap -->
+
+<div class="nav-arrows">
+  <button class="arrow-btn" id="btn-prev" onclick="prev()" disabled>← Back</button>
+  <span class="screen-counter" id="counter">1 / 6</span>
+  <button class="arrow-btn" id="btn-next" onclick="next()">Next →</button>
+</div>
+<div class="screen-name" id="screen-name-label">Onboarding — "When did you last finish a book?"</div>
+
+<script>
+  let current = 0;
+  const total = 6;
+  const names = [
+    'Onboarding — "When did you last finish a book?"',
+    'Personalisation — Build around your life',
+    'Home — Daily reading experience',
+    'Reading — Atomic Habits, Chapter 8',
+    'Reading Receipt — Your week in reading',
+    'Progress — Habit view & milestones'
+  ];
+
+  function goTo(n) {
+    document.getElementById('screen-' + current).classList.remove('active');
+    current = n;
+    document.getElementById('screen-' + current).classList.add('active');
+    updateNav();
+  }
+
+  function next() { if (current < total - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+
+  function updateNav() {
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('screen-name-label').textContent = names[current];
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+
+    const isReading = current === 3;
+    document.getElementById('btn-prev').style.display = isReading ? 'none' : '';
+    document.getElementById('btn-next').style.display = isReading ? 'none' : '';
+    document.getElementById('counter').style.display = isReading ? 'none' : '';
+  }
+
+  function selectChoice(btn) {
+    document.querySelectorAll('#screen-0 .choice-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function selectChip(el, group) {
+    el.classList.toggle('selected');
+  }
+
+  function toggleMood(el) {
+    el.classList.toggle('selected');
+  }
+</script>
+</body>
+</html>
