@@ -1,4 +1,4 @@
-Readio - Why?
+Readio
 
 65 million Americans didn't read a single book last year.
 Not because they don't want to. Because no app was ever built for them.
