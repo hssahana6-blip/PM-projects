@@ -1,7 +1,7 @@
 Readio
 
 65 million Americans didn't read a single book last year.
-Not because they don't want to. Because no app was ever built for them.
+Not because they don't want to. Because no product was ever built for them.
 
 The problem
 Goodreads, StoryGraph, Bookly — every reading app is built for people who already read. They track books, compare shelves, display genre filters. But for the person who says "I used to be a reader," they're useless. You open the app, feel guilt about the book you're 12% through, and close it again.
